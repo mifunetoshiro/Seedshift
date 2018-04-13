@@ -216,25 +216,25 @@ def check(mnemonic):
     return h == nh
 
 if x == 1:
-    print("\nGenerate a valid checksum word to replace the last encrypted word (" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + ")? (y/n)")
-    while True:
-            x = input("Input: ").lower()
-            if x != "y" and x != "n":
-                print("Invalid input.")
-                continue
-            else:
-                if x == "n":
-                    break
+    wordstring = " ".join(shifted_words)
+    if check(wordstring):
+        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is a valid checksum word!")
+    else:
+        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is not a valid checksum word. Generate a new valid word to replace it? (y/n)")
+        while True:
+                x = input("Input: ").lower()
+                if x != "y" and x != "n":
+                    print("Invalid input.")
+                    continue
                 else:
-                    wordstring = " ".join(shifted_words)
-                    if check(wordstring):
-                        print(str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is already a valid checksum word, no need to replace!")
+                    if x == "n":
+                        break
                     else:
                         wordstring = " ".join(shifted_words[:-1])
                         for w in bip39_list:
                             test = wordstring + " " + w
                             if check(test):
-                                print("\nNew valid " + str(len(words)) + "th checksum word: " + w + " | " + str(list(bip39.keys())[list(bip39.values()).index(w)]))
+                                print("\nNew valid " + str(len(words)) + "th checksum word: " + w + " : " + str(list(bip39.keys())[list(bip39.values()).index(w)]))
                                 print("\nPlease note that if you replace the last encrypted word with a valid checksum word, "
                                       "\nthere is no way to get back the original word by using the decrypt function of this script, "
                                       "\nyou will have to remember or write down your original or shifted last word!")
