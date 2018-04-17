@@ -200,7 +200,7 @@ for a, b in enumerate(table):
     if a == 0:
         print("-" * len(line))
 
-# check checksum function code from https://github.com/trezor/python-mnemonic, Copyright (c) 2013-2016 Pavol Rusnak
+# check checksum function code from https://github.com/trezor/python-mnemonic, Copyright (c) 2013-2018 Pavol Rusnak
 def check(mnemonic):
     mnemonic = mnemonic.split(' ')
     try:
