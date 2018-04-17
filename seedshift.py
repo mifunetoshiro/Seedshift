@@ -218,9 +218,9 @@ def check(mnemonic):
 if x == 1:
     wordstring = " ".join(shifted_words)
     if check(wordstring):
-        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is a valid checksum word!")
+        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is a valid " + str(len(words)) + "th checksum word!")
     else:
-        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is not a valid checksum word. Generate a new valid word to replace it? (y/n)")
+        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is not a valid " + str(len(words)) + "th checksum word. Generate a new valid word to replace it? (y/n)")
         while True:
                 x = input("Input: ").lower()
                 if x != "y" and x != "n":
