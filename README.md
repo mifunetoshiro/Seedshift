@@ -1,5 +1,5 @@
 # Seedshift
-Seedshift encrypts/decrypts your mnemonic seed words using a date shift cipher. It supports 12, 18 and 24 word seeds (or their numbers) from the English [BIP-39 wordlist](https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt) of 2048 words, which you also need to download and put in the same folder as this script.
+Seedshift encrypts/decrypts your mnemonic seed words using a date shift cipher. It supports 12, 18 and 24 word seeds (or their numbers) from the English [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) [wordlist](https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt) of 2048 words, which you also need to download and put in the same folder as this script. To run the script, you need [Python 3.x](https://www.python.org/downloads/) installed on your system.
 
 ## Example usage
 Let's say `oppose duck hello neglect reveal key humor mosquito road evoke flock hedgehog` are your MetaMask seed words. You need to write them down somewhere and keep them safe, but writing the original words down is a security risk. If anyone finds your list of words, they can drain your wallet. Instead, use the English BIP-39 wordlist and encrypt them using a date shift cipher (you don't even need this script to do it, just do it by hand instead if you want).
