@@ -240,3 +240,5 @@ if x == 1:
                                       "\nyou will have to remember or write down your original or shifted last word!")
                                 break
                 break
+
+input('\nPress enter to exit.')
