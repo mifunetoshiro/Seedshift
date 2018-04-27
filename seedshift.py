@@ -12,6 +12,9 @@ input_numbers = []
 shifted_words = []
 shifted_numbers = []
 shifted_value = []
+sheet1 = []
+sheet2 = []
+sheet3 = []
 
 with open("english.txt") as wordlist:
     line = wordlist.readline()
@@ -43,9 +46,9 @@ if x != 3:
     while True:
         flag = False
         if x == 1:
-            words = input("Enter your 12, 18 or 24 seed words in \"cat dad jar...\" format: ").lower().split()
+            words = input("\nEnter your 12, 18 or 24 seed words in \"cat dad jar...\" format: ").lower().split()
         elif x == 2:
-            words = input("Enter your 12, 18 or 24 encrypted seed words in \"cat dad jar...\" format: ").lower().split()
+            words = input("\nEnter your 12, 18 or 24 encrypted seed words in \"cat dad jar...\" format: ").lower().split()
         if len(words) not in [12, 18, 24]:
             print(str(len(words)) + " words entered, please enter 12, 18 or 24 words.")
             continue
@@ -65,7 +68,7 @@ if x != 3:
 else:
     while True:
         flag = False
-        numbers = input("Enter your 12, 18 or 24 encrypted seed word numbers in \"1 2 3...\" format: ").split()
+        numbers = input("\nEnter your 12, 18 or 24 encrypted seed word numbers in \"1 2 3...\" format: ").split()
         if len(numbers) not in [12, 18, 24]:
             print(str(len(numbers)) + " numbers entered, please enter 12, 18 or 24 numbers.")
             continue
@@ -95,21 +98,21 @@ else:
 while True:
     try:
         if len(words) == 12:
-            n = int(input("Input the number of dates you want to use (max 4): "))
+            n = int(input("\nInput the number of dates you want to use (max 4): "))
             if n < 1 or n > 4:
                 print("Please enter a valid number (1-4).")
                 continue
             else:
                 break
         elif len(words) == 18:
-            n = int(input("Input the number of dates you want to use (max 6): "))
+            n = int(input("\nInput the number of dates you want to use (max 6): "))
             if n < 1 or n > 6:
                 print("Please enter a valid number (1-6).")
                 continue
             else:
                 break
         elif len(words) == 24:
-            n = int(input("Input the number of dates you want to use (max 8): "))
+            n = int(input("\nInput the number of dates you want to use (max 8): "))
             if n < 1 or n > 8:
                 print("Please enter a valid number (1-8).")
                 continue
@@ -128,7 +131,7 @@ count = 1
 while count <= n:
     while True:
         try:
-            date = input("Enter date " + str(count) + " in YYYY-MM-DD format: ")
+            date = input("\nEnter date " + str(count) + " in YYYY-MM-DD format: ")
             input_dates.append(datetime.datetime.strptime(date, "%Y-%m-%d"))
         except ValueError:
             print("Incorrect date format, please use YYYY-MM-DD.")
@@ -218,6 +221,7 @@ def check(mnemonic):
 if x == 1:
     wordstring = " ".join(shifted_words)
     if check(wordstring):
+        flag = False
         print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is a valid " + str(len(words)) + "th checksum word!")
     else:
         print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is not a valid " + str(len(words)) + "th checksum word. Generate a new valid word to replace it? (y/n)")
@@ -230,15 +234,60 @@ if x == 1:
                     if x == "n":
                         break
                     else:
+                        flag = True
                         wordstring = " ".join(shifted_words[:-1])
                         for w in bip39_list:
                             test = wordstring + " " + w
                             if check(test):
                                 print("\nNew valid " + str(len(words)) + "th checksum word: " + w + " : " + str(list(bip39.keys())[list(bip39.values()).index(w)]))
-                                print("\nPlease note that if you replace the last encrypted word with a valid checksum word, "
-                                      "\nthere is no way to get back the original word by using the decrypt function of this script, "
-                                      "\nyou will have to remember or write down your original or shifted last word!")
+                                print("\nPlease note that if you replace the last encrypted word with a valid checksum word,"
+                                      "\nthere is NO WAY to get back the original word by using the decrypt function of this script,"
+                                      "\nyou will have to remember or write down your original or encrypted last word!")
                                 break
                 break
+    print("\nSplit the encrypted seed words into '2-out-of-3' recovery sheets? (y/n)")
+    while True:
+            x = input("Input: ").lower()
+            if x != "y" and x != "n":
+                print("Invalid input.")
+                continue
+            else:
+                if x == "n":
+                    break
+                else:
+                    count = 1
+                    while count <= len(words):
+                        if count % 3 != 0:
+                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " : " + str(shifted_numbers[count - 1])
+                            sheet1.append(string)
+                        if (count + 1) % 3 != 0:
+                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " : " + str(shifted_numbers[count - 1])
+                            sheet2.append(string)
+                        if (count - 1) % 3 != 0:
+                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " : " + str(shifted_numbers[count - 1])
+                            sheet3.append(string)
+                        if count == len(words):
+                            if flag:
+                                sheet1.append("")
+                                string = "#" + str(count) + " (replaced): " + w + " : " + str(list(bip39.keys())[list(bip39.values()).index(w)])
+                                sheet2.append(string)
+                                sheet3.append(string)
+                        count += 1
+                    headers2 = ["Sheet 1", "Sheet 2", "Sheet 3"]
+                    table2 = [headers2] + list(zip(sheet1, sheet2, sheet3))
+                    print("\n")
+                    for a, b in enumerate(table2):
+                        line = "| ".join(str(c).ljust(33) for c in b)
+                        print(line)
+                        if a == 0:
+                            print("-" * len(line))
+                    print("\nEach sheet has two thirds of your encrypted seed words."
+                          "\nYou need any two sheets to recover your full encrypted mnemonic phrase."
+                          "\nStore each at a different safe place or hand out to your family members or attorney."
+                          "\nA single sheet cannot give access to your wallet, if you lose the other two, your funds are lost forever!")
+                    if flag:
+                        print("\nPlease don't forget that if you replaced the last word with a valid checksum word,"
+                              "\nyou will have to remember or write down your original or encrypted last word somewhere as well!")
+            break
 
 input('\nPress enter to exit.')
