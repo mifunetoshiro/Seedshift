@@ -4,17 +4,21 @@ import hashlib
 
 bip39 = {}
 bip39_list = []
+bip39_cn = {}
 input_words = []
 input_word_numbers = []
+input_codepoints = []
 input_dates = []
 shift_values = []
 input_numbers = []
 shifted_words = []
 shifted_numbers = []
 shifted_value = []
+chinese = []
 sheet1 = []
 sheet2 = []
 sheet3 = []
+cn_flag = False
 
 with open("english.txt") as wordlist:
     line = wordlist.readline()
@@ -25,15 +29,29 @@ with open("english.txt") as wordlist:
         line = wordlist.readline()
         count += 1
     if len(bip39) != 2048:
-        raise ValueError("Wordlist has " + str(len(bip39)) + " lines, expected 2048!")
+        raise ValueError("english.txt has " + str(len(bip39)) + " lines, expected 2048!")
+
+try:
+    with open("chinese_traditional.txt", encoding="utf-8") as wordlist:
+        line = wordlist.readline()
+        count = 1
+        while line:
+            bip39_cn[count] = line.strip()
+            line = wordlist.readline()
+            count += 1
+        if len(bip39_cn) != 2048:
+            raise ValueError("chinese_traditional.txt has " + str(len(bip39_cn)) + " lines, expected 2048!")
+except FileNotFoundError:
+    cn_flag = True
 
 while True:
     print("Enter '1' to encrypt your seed words.")
     print("Enter '2' to decrypt your seed words.")
     print("Enter '3' to decrypt your seed word numbers.")
+    print("Enter '4' to decrypt your Traditional Chinese Unicode codepoints.")
     try:
         x = int(input("Input: "))
-        if x not in [1, 2, 3]:
+        if x not in [1, 2, 3, 4]:
             print("Invalid input.")
             continue
         else:
@@ -42,7 +60,7 @@ while True:
         print("Invalid input.")
         continue
 
-if x != 3:
+if x == 1 or x == 2:
     while True:
         flag = False
         if x == 1:
@@ -65,7 +83,7 @@ if x != 3:
             if flag:
                 continue
             break
-else:
+elif x == 3:
     while True:
         flag = False
         numbers = input("\nEnter your 12, 18 or 24 encrypted seed word numbers in \"1 2 3...\" format: ").split()
@@ -94,6 +112,38 @@ else:
                 input_words.append(bip39[int(n)])
             words = input_words
             break
+elif x == 4:
+    if cn_flag:
+        raise FileNotFoundError("chinese_traditional.txt not found!")
+    else:
+        while True:
+            flag = False
+            codepoints = input("\nEnter your 12, 18 or 24 Traditional Chinese codepoints in \"7684 4E00 662F...\" format: ").split()
+            if len(codepoints) not in [12, 18, 24]:
+                print(str(len(codepoints)) + " codepoints entered, please enter 12, 18 or 24 codepoints.")
+                continue
+            else:
+                if not flag:
+                    for cp in codepoints:
+                        try:
+                            if chr(int(cp, 16)) not in bip39_cn.values():
+                                flag = True
+                                input_codepoints.clear()
+                                print("'" + cp + "' is not a valid Traditional Chinese BIP-39 seed word Unicode codepoint.")
+                                continue
+                            else:
+                                input_codepoints.append(cp.upper())
+                        except ValueError:
+                            flag = True
+                            input_codepoints.clear()
+                            print("'" + cp + "' is not a valid Traditional Chinese BIP-39 seed word Unicode codepoint.")
+                            continue
+                if flag:
+                    continue
+                for n in input_codepoints:
+                    input_words.append(bip39[list(bip39.keys())[list(bip39_cn.values()).index(chr(int(n, 16)))]])
+                words = input_words
+                break
 
 while True:
     try:
@@ -155,6 +205,10 @@ def encrypt(words):
             shifted_words.append(bip39[number])
             shifted_numbers.append(number)
             shifted_value.append(shift_values[count])
+            if not cn_flag:
+                chinese.append(hex(ord(bip39_cn[number])).upper()[2:])
+            else:
+                chinese.append("")
             count += 1
         except KeyError:
             index = number % 2048
@@ -163,6 +217,10 @@ def encrypt(words):
             shifted_words.append(bip39[index])
             shifted_numbers.append(index)
             shifted_value.append(shift_values[count])
+            if not cn_flag:
+                chinese.append(hex(ord(bip39_cn[index])).upper()[2:])
+            else:
+                chinese.append("")
             count += 1
 
 def decrypt(words):
@@ -187,15 +245,19 @@ def decrypt(words):
             shifted_value.append(shift_values[count])
             count += 1
 
+pos = range(1, len(input_words) + 1)
 if x == 1:
     encrypt(input_words)
-    headers = ["#", "Original", "Number", "Shifted", "Encrypted", "Number"]
+    headers = ["#", "Original", "Number", "Shifted", "Encrypted", "Number", "Chinese"]
+    table = [headers] + list(zip(pos, input_words, input_numbers, shifted_value, shifted_words, shifted_numbers, chinese))
 elif x == 2 or x == 3:
     decrypt(input_words)
     headers = ["#", "Encrypted", "Number", "Shifted", "Decrypted", "Number"]
-
-pos = range(1, len(input_words) + 1)
-table = [headers] + list(zip(pos, input_words, input_numbers, shifted_value, shifted_words, shifted_numbers))
+    table = [headers] + list(zip(pos, input_words, input_numbers, shifted_value, shifted_words, shifted_numbers))
+elif x == 4:
+    decrypt(input_words)
+    headers = ["#", "Chinese", "English", "Number", "Shifted", "Decrypted", "Number"]
+    table = [headers] + list(zip(pos, input_codepoints, input_words, input_numbers, shifted_value, shifted_words, shifted_numbers))
 print("\n")
 for a, b in enumerate(table):
     line = "| ".join(str(c).ljust(10) for c in b)
@@ -222,9 +284,9 @@ if x == 1:
     wordstring = " ".join(shifted_words)
     if check(wordstring):
         flag = False
-        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is a valid " + str(len(words)) + "th checksum word!")
+        print("\n" + str(shifted_words[-1]) + " / " + str(shifted_numbers[-1]) + " is a valid " + str(len(words)) + "th checksum word!")
     else:
-        print("\n" + str(shifted_words[-1]) + " : " + str(shifted_numbers[-1]) + " is not a valid " + str(len(words)) + "th checksum word. Generate a new valid word to replace it? (y/n)")
+        print("\n" + str(shifted_words[-1]) + " / " + str(shifted_numbers[-1]) + " is not a valid " + str(len(words)) + "th checksum word. Generate a new valid word to replace it? (y/n)")
         while True:
                 x = input("Input: ").lower()
                 if x != "y" and x != "n":
@@ -239,10 +301,10 @@ if x == 1:
                         for w in bip39_list:
                             test = wordstring + " " + w
                             if check(test):
-                                print("\nNew valid " + str(len(words)) + "th checksum word: " + w + " : " + str(list(bip39.keys())[list(bip39.values()).index(w)]))
+                                print("\nNew valid " + str(len(words)) + "th checksum word: " + w + " / " + str(list(bip39.keys())[list(bip39.values()).index(w)]))
                                 print("\nPlease note that if you replace the last encrypted word with a valid checksum word,"
                                       "\nthere is NO WAY to get back the original word by using the decrypt function of this script,"
-                                      "\nyou will have to remember or write down your original or encrypted last word!")
+                                      "\nyou will have to remember or write down your original or encrypted last word as well!")
                                 break
                 break
     print("\nSplit the encrypted seed words into '2-out-of-3' recovery sheets? (y/n)")
@@ -258,18 +320,18 @@ if x == 1:
                     count = 1
                     while count <= len(words):
                         if count % 3 != 0:
-                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " : " + str(shifted_numbers[count - 1])
+                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " / " + str(shifted_numbers[count - 1]) + " / " + str(chinese[count - 1])
                             sheet1.append(string)
                         if (count + 1) % 3 != 0:
-                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " : " + str(shifted_numbers[count - 1])
+                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " / " + str(shifted_numbers[count - 1]) + " / " + str(chinese[count - 1])
                             sheet2.append(string)
                         if (count - 1) % 3 != 0:
-                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " : " + str(shifted_numbers[count - 1])
+                            string = "#" + str(count) + ": " + str(shifted_words[count - 1]) + " / " + str(shifted_numbers[count - 1]) + " / " + str(chinese[count - 1])
                             sheet3.append(string)
                         if count == len(words):
                             if flag:
                                 sheet1.append("")
-                                string = "#" + str(count) + " (replaced): " + w + " : " + str(list(bip39.keys())[list(bip39.values()).index(w)])
+                                string = "#" + str(count) + " (replaced): " + w + " / " + str(list(bip39.keys())[list(bip39.values()).index(w)])
                                 sheet2.append(string)
                                 sheet3.append(string)
                         count += 1
