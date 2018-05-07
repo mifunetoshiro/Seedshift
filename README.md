@@ -1,5 +1,5 @@
 # Seedshift
-Seedshift encrypts/decrypts your mnemonic seed words using a date shift cipher. It supports 12, 18 and 24 word seeds (or their numbers) from the English [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) [wordlist](https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt) of 2048 words, which you also need to download and put in the same folder as this script. To run the script, you need [Python 3.x](https://www.python.org/downloads/) installed on your system.
+Seedshift encrypts/decrypts your mnemonic seed words using a date shift cipher. It supports 12, 18 and 24 word seeds (or their numbers) from the English [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) [wordlist](https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt) of 2048 words, which you also need to download and put in the same folder as this script. Additionally, to further obfuscate your encrypted seed words, also download the BIP-39 Traditional Chinese [wordlist](https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/chinese_traditional.txt) (don't worry, you don't need to know or learn Chinese), to map your English words' positions in the wordlist to the Unicode codepoints of the characters at the same positions in the Traditional Chinese wordlist. To run the script, you need [Python 3.x](https://www.python.org/downloads/) installed on your system.
 
 ## Purpose
 The purpose of this is to be able to safely write down your mnemonic seed words, not having to worry about a thief stealing your private keys, and in case something happens to you, allow your family to regain access to your wallet without needing to know a complex passphrase (TREZOR/Ledger), as all they need to know is the dates you used and the method to decrypt the words (pretty easy if it's in-family birthdays). Gather them around the table and do a couple of examples by hand. If you have a TREZOR or Ledger hardware wallet, having a complex passphrase as the "25th" word is more secure, but the more complex the passphrase is, the easier it is for your family or even you to not remember it at all (unless you wrote it down, which is a security risk in itself). If something were to happen to you, having a simpler passphrase (such as names or birthdates) would make it easier for your family to remember and access your wallet, and you could use both a passphrase *and* encrypt the seed words with a date shift cipher for extra security.
@@ -13,39 +13,44 @@ The script takes dates in YYYY-MM-DD format and sorts them from oldest to newest
 
 The script will automatically sort the dates from oldest to newest (you don't have to input them in that order) and split each in 3 parts (year, month, day) which will be used to right-shift the words' positions in the English BIP-39 wordlist. In the above example:
 ```1956, 4, 27, 1963, 7, 10, 1994, 1, 31```.
-Given the above seed words and dates, the script will shift the words and output a table with the shifted words and their number:
+Given the above seed words and dates, the script will shift the words and output a table with the shifted words, their number and the Unicode codepoint of the Chinese counterpart character in the Traditional Chinese wordlist (if present):
 
-| #  | Original | Number | Shifted | Encrypted | Number |
-|----|----------|--------|---------|-----------|--------|
-| 1  | oppose   | 1245   | 1956    | mosquito  | 1153   |
-| 2  | duck     | 543    | 4       | dust      | 547    |
-| 3  | hello    | 855    | 27      | hotel     | 882    |
-| 4  | neglect  | 1185   | 1963    | maximum   | 1100   |
-| 5  | reveal   | 1476   | 7       | rich      | 1483   |
-| 6  | key      | 977    | 10      | kitten    | 987    |
-| 7  | humor    | 889    | 1994    | hair      | 835    |
-| 8  | mosquito | 1153   | 1       | mother    | 1154   |
-| 9  | road     | 1496   | 31      | salute    | 1527   |
-| 10 | evoke    | 625    | 1956    | dream     | 533    |
-| 11 | flock    | 715    | 4       | flush     | 719    |
-| 12 | hedgehog | 853    | 27      | hospital  | 880    |
+| #  | Original | Number | Shifted | Encrypted | Number | Chinese |
+|----|----------|--------|---------|-----------|--------|---------|
+| 1  | oppose   | 1245   | 1956    | mosquito  | 1153   | 5BF6    |
+| 2  | duck     | 543    | 4       | dust      | 547    | 5B57    |
+| 3  | hello    | 855    | 27      | hotel     | 882    | 6162    |
+| 4  | neglect  | 1185   | 1963    | maximum   | 1100   | 7238    |
+| 5  | reveal   | 1476   | 7       | rich      | 1483   | 6C2E    |
+| 6  | key      | 977    | 10      | kitten    | 987    | 6FC3    |
+| 7  | humor    | 889    | 1994    | hair      | 835    | 4E4E    |
+| 8  | mosquito | 1153   | 1       | mother    | 1154   | 5348    |
+| 9  | road     | 1496   | 31      | salute    | 1527   | 95CA    |
+| 10 | evoke    | 625    | 1956    | dream     | 533    | 52E2    |
+| 11 | flock    | 715    | 4       | flush     | 719    | 932F    |
+| 12 | hedgehog | 853    | 27      | hospital  | 880    | 4E95    |
 
-Write down the encrypted words or their numbers instead of the original seed words and put them in a safe place. To decrypt them and get back your original seed words, the script will accept either the encrypted words or their numbers and the same dates you used to encrypt them (again, you can also do all of this by hand).
+Write down the encrypted words, their numbers or the Chinese Unicode codepoints instead of the original seed words and put them in a safe place. To decrypt them and get back your original seed words, the script will accept the encrypted words, their numbers or the Unicode codepoints and the same dates you used to encrypt them (again, you can also do all of this by hand).
 
-Note that the last encrypted word will most likely not be a valid checksum word (in the above example, `hospital` is valid, though). Having a valid checksum last word can provide plausible deniability in that the encrypted words are in fact encrypted, as they are valid BIP-39 seed words. You could even store a small amount of coins there, so if someone ever steals/uses your seed words, that's all they're going to think you have. The script can generate a valid last checksum word for your encrypted words if you want to replace it (if it's already valid, the script will tell you so, and you don't have to replace it), however, it's not possible to decrypt it back to the original checksum word. If you choose to replace it, you will have to remember or write down your original or encrypted last word!
+Note that the last encrypted word will most likely not be a valid checksum word (in the above example, `hospital` is valid, though). Having a valid checksum last word can provide plausible deniability in that the encrypted words are in fact encrypted, as they are valid BIP-39 seed words. You could even store a small amount of coins there, so if someone ever steals/uses your seed words, that's all they're going to think you have. The script can generate a valid last checksum word for your encrypted words if you want to replace it (if it's already valid, the script will tell you so, and you don't have to replace it), however, it's not possible to decrypt it back to the original checksum word. If you choose to replace it, you will have to remember or write down your original or encrypted last word as well!
+
+You can store the Chinese Unicode codepoints in multiple ways, since each is 4 characters long (just remember this fact when you want to rebuild your original seed words). You could write it unchanged: ```5BF6 5B57 6162 7238 6C2E 6FC3 4E4E 5348 95CA 52E2 932F 4E95```, or, to make it look even more random, as a bunch of hexadecimal characters that return useless nonsense when converted back to text (```[ö[Wabr8l.oÃNNSHÊRâ/N```), you could write it without spaces: ```5BF65B57616272386C2E6FC34E4E534895CA52E2932F4E95```, you could write it with a space every 2 characters: ```5B F6 5B 57 61 62 72 38 6C 2E 6F C3 4E 4E 53 48 95 CA 52 E2 93 2F 4E 95```, you could group two or more together: ```5BF65B57 61627238 6C2E6FC3 4E4E5348 95CA52E2 932F4E95```, etc.
+
+To lookup and convert the Unicode codepoints manually, just do a Google search of e.g. "4E95 unicode" or use Unicode.org's [Unihan Database Lookup](http://unicode.org/charts/unihan.html), then find the position of the character in the BIP-39 Traditional Chinese wordlist.
 
 Optionally, you can split the encrypted seed words into 2-out-of-3 recovery sheets. The script will output a table:
 
-| Sheet 1             | Sheet 2             | Sheet 3             |
-|---------------------|---------------------|---------------------|
-| #1: mosquito : 1153 | #1: mosquito : 1153 | #2: dust : 547      |
-| #2: dust : 547      | #3: hotel : 882     | #3: hotel : 882     |
-| #4: maximum : 1100  | #4: maximum : 1100  | #5: rich : 1483     |
-| #5: rich : 1483     | #6: kitten : 987    | #6: kitten : 987    |
-| #7: hair : 835      | #7: hair : 835      | #8: mother : 1154   |
-| #8: mother : 1154   | #9: salute : 1527   | #9: salute : 1527   |
-| #10: dream : 533    | #10: dream : 533    | #11: flush : 719    |
-| #11: flush : 719    | #12: hospital : 880 | #12: hospital : 880 |
+| Sheet 1                    | Sheet 2                    | Sheet 3                    |
+|----------------------------|----------------------------|----------------------------|
+| #1: mosquito / 1153 / 5BF6 | #1: mosquito / 1153 / 5BF6 | #2: dust / 547 / 5B57      |
+| #2: dust / 547 / 5B57      | #3: hotel / 882 / 6162     | #3: hotel / 882 / 6162     |
+| #4: maximum / 1100 / 7238  | #4: maximum / 1100 / 7238  | #5: rich / 1483 / 6C2E     |
+| #5: rich / 1483 / 6C2E     | #6: kitten / 987 / 6FC3    | #6: kitten / 987 / 6FC3    |
+| #7: hair / 835 / 4E4E      | #7: hair / 835 / 4E4E      | #8: mother / 1154 / 5348   |
+| #8: mother / 1154 / 5348   | #9: salute / 1527 / 95CA   | #9: salute / 1527 / 95CA   |
+| #10: dream / 533 / 52E2    | #10: dream / 533 / 52E2    | #11: flush / 719 / 932F    |
+| #11: flush / 719 / 932F    | #12: hospital / 880 / 4E95 | #12: hospital / 880 / 4E95 |
+
 
 Write down and store each sheet separately at a different location. Please remember that if you replaced the last encrypted seed word with a valid checksum word, you will have to remember or write down your original or encrypted last word somewhere as well!
 
