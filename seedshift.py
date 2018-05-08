@@ -1,6 +1,10 @@
 import datetime
 import binascii
 import hashlib
+import sys
+
+if sys.version_info[0] < 3:
+    raise Exception("Python 3.x is required!")
 
 bip39 = {}
 bip39_list = []
