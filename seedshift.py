@@ -54,7 +54,7 @@ print("Do NOT run this script on a computer connected to the internet and"
 q = input("Type \"yes\" if you understand the risks, made precautions and want to proceed: ")
 if q.lower() == "yes":
     while True:
-        print("Enter '1' to encrypt your seed words.")
+        print("\nEnter '1' to encrypt your seed words.")
         print("Enter '2' to decrypt your seed words.")
         print("Enter '3' to decrypt your seed word numbers.")
         print("Enter '4' to decrypt your Traditional Chinese Unicode codepoints.")
