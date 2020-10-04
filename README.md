@@ -41,7 +41,7 @@ Note that the last encrypted word will most likely not be a valid checksum word 
 
 You can store the Chinese Unicode codepoints in multiple ways, since each is 4 characters long (just remember this fact when you want to rebuild your original seed words). You could write it unchanged: `5BF6 5B57 6162 7238 6C2E 6FC3 4E4E 5348 95CA 52E2 932F 4E95`, or, to make it look even more random, as a bunch of hexadecimal characters that return useless nonsense when converted back to text (*[ö[Wabr8l.oÃNNSHÊRâ/N*), you could write it without spaces: `5BF65B57616272386C2E6FC34E4E534895CA52E2932F4E95`, you could write it with a space every 2 characters: `5B F6 5B 57 61 62 72 38 6C 2E 6F C3 4E 4E 53 48 95 CA 52 E2 93 2F 4E 95`, you could group two or more together: `5BF65B57 61627238 6C2E6FC3 4E4E5348 95CA52E2 932F4E95`, etc.
 
-To lookup and convert the Unicode codepoints manually, just do a Google search of e.g. "4E95 unicode" or use Unicode.org's [Unihan Database Lookup](http://unicode.org/charts/unihan.html), then find the position of the character in the BIP-39 Traditional Chinese wordlist. I included a "mapping_table.txt" file for faster/easier lookup to save you the trouble.
+To lookup and convert the Unicode codepoints manually, just do a Google search of e.g. "4E95 unicode" or use Unicode.org's [Unihan Database Lookup](https://unicode.org/charts/unihan.html), then find the position of the character in the BIP-39 Traditional Chinese wordlist. I included a "mapping_table.txt" file for faster/easier lookup to save you the trouble.
 
 Optionally, you can split the encrypted seed words into 2-out-of-3 recovery sheets. The script will output a table:
 
