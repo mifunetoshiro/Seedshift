@@ -127,13 +127,14 @@ if q.lower() == "yes":
         else:
             while True:
                 flag = False
-                codepoints = input("\nEnter your 12, 18 or 24 Traditional Chinese codepoints in \"7684 4E00 662F...\" format: ").split()
-                if len(codepoints) not in [12, 18, 24]:
-                    print(str(len(codepoints)) + " codepoints entered, please enter 12, 18 or 24 codepoints.")
+                codepoints = input("\nEnter your 12, 18 or 24 Traditional Chinese codepoints in any format: ").replace(" ", "")
+                parts = [codepoints[i:i + 4] for i in range(0, len(codepoints), 4)]
+                if len(parts) not in [12, 18, 24]:
+                    print(str(len(parts)) + " codepoints entered, please enter 12, 18 or 24 codepoints.")
                     continue
                 else:
                     if not flag:
-                        for cp in codepoints:
+                        for cp in parts:
                             try:
                                 if chr(int(cp, 16)) not in bip39_cn.values():
                                     flag = True
