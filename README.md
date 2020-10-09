@@ -58,3 +58,10 @@ Optionally, you can split the encrypted seed words into 2-out-of-3 recovery shee
 
 
 Write down and store each sheet separately at a different location. Please remember that if you replaced the last encrypted seed word with a valid checksum word, you will have to remember or write down your original or encrypted last word somewhere as well!
+
+## Donation
+If you'd like to thank me with a small donation, you can send a few cents this way:
+
+ETH: 0x2a7fA9627ad2fF7c2f1Ea31e9448C197d76A734A
+
+BTC: 3E5dKZ8GyzXTCRPafuQTwPbNRER4HkM58H
