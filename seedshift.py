@@ -2,6 +2,7 @@ import datetime
 import binascii
 import hashlib
 import sys
+import socket
 
 if sys.version_info[0] < 3:
     raise Exception("Python 3.x is required!")
@@ -48,6 +49,9 @@ try:
 except FileNotFoundError:
     cn_flag = True
 
+ip = socket.gethostbyname(socket.gethostname())
+if ip != "127.0.0.1":
+    print("WARNING! You are connected to the internet!")
 print("Do NOT run this script on a computer connected to the internet and"
       "\ndo NOT reconnect this computer to the internet without wiping/reformatting it first!"
       "\nA keylogger can steal your seed words!")
