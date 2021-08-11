@@ -77,11 +77,11 @@ if q.lower() == "yes":
         while True:
             flag = False
             if x == 1:
-                words = input("\nEnter your 12, 18 or 24 seed words in \"cat dad jar...\" format: ").lower().split()
+                words = input("\nEnter your 12, 15, 18 or 24 seed words in \"cat dad jar...\" format: ").lower().split()
             elif x == 2:
-                words = input("\nEnter your 12, 18 or 24 encrypted seed words in \"cat dad jar...\" format: ").lower().split()
-            if len(words) not in [12, 18, 24]:
-                print(str(len(words)) + " words entered, please enter 12, 18 or 24 words.")
+                words = input("\nEnter your 12, 15, 18 or 24 encrypted seed words in \"cat dad jar...\" format: ").lower().split()
+            if len(words) not in [12, 15, 18, 24]:
+                print(str(len(words)) + " words entered, please enter 12, 15, 18 or 24 words.")
                 continue
             else:
                 if not flag:
@@ -99,9 +99,9 @@ if q.lower() == "yes":
     elif x == 3:
         while True:
             flag = False
-            numbers = input("\nEnter your 12, 18 or 24 encrypted seed word numbers in \"1 2 3...\" format: ").split()
-            if len(numbers) not in [12, 18, 24]:
-                print(str(len(numbers)) + " numbers entered, please enter 12, 18 or 24 numbers.")
+            numbers = input("\nEnter your 12, 15, 18 or 24 encrypted seed word numbers in \"1 2 3...\" format: ").split()
+            if len(numbers) not in [12, 15, 18, 24]:
+                print(str(len(numbers)) + " numbers entered, please enter 12, 15, 18 or 24 numbers.")
                 continue
             else:
                 if not flag:
@@ -131,10 +131,10 @@ if q.lower() == "yes":
         else:
             while True:
                 flag = False
-                codepoints = input("\nEnter your 12, 18 or 24 Traditional Chinese codepoints in any format: ").replace(" ", "")
+                codepoints = input("\nEnter your 12, 15, 18 or 24 Traditional Chinese codepoints in any format: ").replace(" ", "")
                 parts = [codepoints[i:i + 4] for i in range(0, len(codepoints), 4)]
-                if len(parts) not in [12, 18, 24]:
-                    print(str(len(parts)) + " codepoints entered, please enter 12, 18 or 24 codepoints.")
+                if len(parts) not in [12, 15, 18, 24]:
+                    print(str(len(parts)) + " codepoints entered, please enter 12, 15, 18 or 24 codepoints.")
                     continue
                 else:
                     if not flag:
@@ -168,6 +168,13 @@ if q.lower() == "yes":
                     continue
                 else:
                     break
+            elif len(words) == 15:
+                n = int(input("\nInput the number of dates you want to use (max 5): "))
+                if n < 1 or n > 5:
+                    print("Please enter a valid number (1-5).")
+                    continue
+                else:
+                    break
             elif len(words) == 18:
                 n = int(input("\nInput the number of dates you want to use (max 6): "))
                 if n < 1 or n > 6:
@@ -185,6 +192,8 @@ if q.lower() == "yes":
         except ValueError:
             if len(words) == 12:
                 print("Please enter a valid number (1-4).")
+            elif len(words) == 15:
+                print("Please enter a valid number (1-5).")
             elif len(words) == 18:
                 print("Please enter a valid number (1-6).")
             elif len(words) == 24:
