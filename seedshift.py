@@ -205,6 +205,11 @@ if q.lower() == "yes":
         while True:
             try:
                 date = input("\nEnter date " + str(count) + " in YYYY-MM-DD format: ")
+                tmp = date.split("-")
+                if len(tmp[0]) < 4:
+                    while len(tmp[0]) < 4:
+                        tmp[0] = ''.join(('0',tmp[0]))
+                    date = tmp[0] + "-" + tmp[1] + "-" + tmp[2]
                 input_dates.append(datetime.datetime.strptime(date, "%Y-%m-%d"))
             except ValueError:
                 print("Incorrect date format, please use YYYY-MM-DD.")
