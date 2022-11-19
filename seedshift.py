@@ -365,8 +365,8 @@ if q.lower() == "yes":
                             if check(test):
                                 print("\nNew valid " + str(len(words)) + "th checksum word: " + w + " / " + str(list(bip39.keys())[list(bip39.values()).index(w)]))
                                 print("\nPlease note that if you replace the last encrypted word with a valid checksum word,"
-                                      "\nyou will have to bruteforce/generate all valid checksum words with this script and test them one by one, or:"
-                                      "\nyou will have to remember or write down your original or encrypted last word as well!")
+                                      "\nyou will have to remember or write down your original or encrypted last word as well, or optionally:"
+                                      "\nbruteforce/generate all valid checksum words with this script and test them one by one!")
                                 break
                 break
         print("\nSplit the encrypted seed words into '2-out-of-3' recovery sheets? (y/n)")
@@ -411,7 +411,7 @@ if q.lower() == "yes":
                           "\nA single sheet cannot give access to your wallet, if you lose the other two, your funds are lost forever!")
                     if flag:
                         print("\nPlease don't forget that if you replaced the last word with a valid checksum word,"
-                              "\nyou will have to remember or write down your original or encrypted last word somewhere as well,"
-                              "\or you will have to bruteforce/generate all valid checksum words with this script and test them one by one!")
+                              "\nyou will have to remember or write down your original or encrypted last word somewhere as well, or optionally:"
+                              "\nbruteforce/generate all valid checksum words with this script and test them one by one!")
             break
     input('\nPress enter to exit.')
