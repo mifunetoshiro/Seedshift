@@ -65,4 +65,5 @@ If you'd like to thank me with a small donation, you can send a few cents this w
 ETH, MATIC, LRC: 0x465ac44811f3ffa02bcade67324bc3fb7a0e0f0b
 
 BTC: 1AtiD4fzkxKZKJseUCLczhPuZGNoymZcc2
+
 BTC (SegWit): bc1qkm34k23a6tktwvyh2ed80y5mc9z78cpvqrxydx
