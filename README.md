@@ -62,6 +62,7 @@ Write down and store each sheet separately at a different location. Please remem
 ## Donation
 If you'd like to thank me with a small donation, you can send a few cents this way:
 
-ETH: 0x2a7fA9627ad2fF7c2f1Ea31e9448C197d76A734A
+ETH, MATIC, LRC: 0x465ac44811f3ffa02bcade67324bc3fb7a0e0f0b
 
-BTC: 3E5dKZ8GyzXTCRPafuQTwPbNRER4HkM58H
+BTC: 1AtiD4fzkxKZKJseUCLczhPuZGNoymZcc2
+BTC (SegWit): bc1qkm34k23a6tktwvyh2ed80y5mc9z78cpvqrxydx
