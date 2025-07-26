@@ -310,11 +310,11 @@ if q.lower() == "yes":
             print(line)
             if a == 0:
                 print("-" * len(line))
-        wordstring = " ".join(input_words)
+        wordstring = " ".join(shifted_words)
         if check(wordstring):
-            print("\n" + str(input_words[-1]) + " / " + str(input_numbers[-1]) + " is a valid checksum word, generate all valid last checksum words anyway? (y/n)")
+            print("\n" + str(shifted_words[-1]) + " / " + str(shifted_numbers[-1]) + " is a valid checksum word, generate all valid last checksum words anyway in case you replaced the last one manually? (y/n)")
         else:
-            print("\n" + str(input_words[-1]) + " / " + str(input_numbers[-1]) + " is not a valid checksum word, generate all valid last checksum words? (y/n)")
+            print("\n" + str(shifted_words[-1]) + " / " + str(shifted_numbers[-1]) + " is not a valid checksum word, generate all valid last checksum words? (y/n)")
         while True:
             x = input("Input: ").lower()
             if x != "y" and x != "n":
@@ -324,7 +324,7 @@ if q.lower() == "yes":
                 if x == "n":
                     break
                 else:
-                    wordstring = " ".join(input_words[:-1])
+                    wordstring = " ".join(shifted_words[:-1])
                     for w in bip39_list:
                         test = wordstring + " " + w
                         if check(test):
